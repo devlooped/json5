@@ -1,6 +1,4 @@
 <Solution>
-  <Folder Name="/src/">
-    <Project Path="src/Json5/Json5.csproj" />
-    <Project Path="src/Tests/Tests.csproj" />
-  </Folder>
+  <Project Path="src/Json5/Json5.csproj" />
+  <Project Path="src/Tests/Tests.csproj" />
 </Solution>
