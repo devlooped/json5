@@ -36,7 +36,7 @@ public class ConsistencyTests
         Assert.Equal(3, node!["tags"]!.AsArray().Count);
         Assert.Equal(255L, node!["nested"]!["hex"]!.GetValue<long>());
         Assert.Equal(0.5, node!["nested"]!["float"]!.GetValue<double>());
-        Assert.Equal(true, node!["nested"]!["flag"]!.GetValue<bool>());
+        Assert.True(node!["nested"]!["flag"]!.GetValue<bool>());
         Assert.Null(node!["nested"]!["nothing"]);
 
         // Deserialize path

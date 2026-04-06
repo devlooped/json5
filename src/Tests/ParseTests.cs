@@ -13,10 +13,10 @@ public class ParseTests
     public void ParseNull() => Assert.Null(J5.Parse("null"));
 
     [Fact]
-    public void ParseTrue() => Assert.Equal(true, J5.Parse("true")!.GetValue<bool>());
+    public void ParseTrue() => Assert.True(J5.Parse("true")!.GetValue<bool>());
 
     [Fact]
-    public void ParseFalse() => Assert.Equal(false, J5.Parse("false")!.GetValue<bool>());
+    public void ParseFalse() => Assert.False(J5.Parse("false")!.GetValue<bool>());
 
     [Theory]
     [InlineData("42", 42L)]
@@ -227,7 +227,7 @@ public class ParseTests
         Assert.Equal(5, arr.Count);
         Assert.Equal(1L, arr[0]!.GetValue<long>());
         Assert.Equal("two", arr[1]!.GetValue<string>());
-        Assert.Equal(true, arr[2]!.GetValue<bool>());
+        Assert.True(arr[2]!.GetValue<bool>());
         Assert.Null(arr[3]);
         Assert.Equal(3L, arr[4]!["a"]!.GetValue<long>());
     }
