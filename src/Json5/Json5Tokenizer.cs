@@ -11,6 +11,7 @@ ref struct Json5Tokenizer
 {
     readonly ReadOnlySpan<byte> buffer;
     readonly int maxDepth;
+    readonly bool autoDedent;
     int position;
     int line;
     int column;
@@ -32,6 +33,7 @@ ref struct Json5Tokenizer
     {
         buffer = utf8;
         maxDepth = options.MaxDepth > 0 ? options.MaxDepth : 64;
+        autoDedent = options.AutoDedent;
         position = 0;
         line = 1;
         column = 1;
@@ -100,6 +102,7 @@ ref struct Json5Tokenizer
             case (byte)'"':
             case (byte)'\'':
                 ReadString(b);
+                if (autoDedent) DedentStringValue();
                 return true;
 
             default:
@@ -489,6 +492,140 @@ ref struct Json5Tokenizer
         }
         return (char)value;
     }
+
+    // ── Auto-dedent ──────────────────────────────────────────────────
+
+    void DedentStringValue()
+    {
+        var s = StringValue;
+        if (s is null) return;
+
+        // Fast path: no newline at all — nothing to dedent
+        if (s.IndexOf('\n') < 0) return;
+
+        var span = s.AsSpan();
+
+        // ── Pass 1: count lines; detect first/last blank lines ───────
+        int totalLines = 0;
+        bool firstLineBlank = false;
+        bool lastLineBlank = false;
+
+        int pos = 0;
+        while (pos <= span.Length)
+        {
+            int lineStart = pos;
+            int lineEnd = pos;
+            while (lineEnd < span.Length && span[lineEnd] != '\n' && span[lineEnd] != '\r')
+                lineEnd++;
+
+            bool isBlank = IsLineAllWhitespace(span, lineStart, lineEnd - lineStart);
+
+            if (totalLines == 0) firstLineBlank = isBlank;
+            lastLineBlank = isBlank;
+            totalLines++;
+
+            if (lineEnd >= span.Length) break;
+            pos = AdvancePastNewline(span, lineEnd);
+        }
+
+        int effectiveFirst = firstLineBlank ? 1 : 0;
+        int effectiveLast = lastLineBlank && totalLines - 1 > effectiveFirst
+            ? totalLines - 2
+            : totalLines - 1;
+
+        if (effectiveFirst > effectiveLast)
+        {
+            StringValue = string.Empty;
+            return;
+        }
+
+        // ── Pass 2: find minimum indent across non-blank lines ───────
+        int minIndent = int.MaxValue;
+        pos = 0;
+        int lineIdx = 0;
+        while (pos <= span.Length)
+        {
+            int lineStart = pos;
+            int lineEnd = pos;
+            while (lineEnd < span.Length && span[lineEnd] != '\n' && span[lineEnd] != '\r')
+                lineEnd++;
+
+            if (lineIdx >= effectiveFirst && lineIdx <= effectiveLast)
+            {
+                int lineLen = lineEnd - lineStart;
+                if (!IsLineAllWhitespace(span, lineStart, lineLen))
+                {
+                    int indent = 0;
+                    while (indent < lineLen && (span[lineStart + indent] == ' ' || span[lineStart + indent] == '\t'))
+                        indent++;
+                    if (indent < minIndent) minIndent = indent;
+                }
+            }
+
+            lineIdx++;
+            if (lineEnd >= span.Length) break;
+            pos = AdvancePastNewline(span, lineEnd);
+        }
+
+        if (minIndent == int.MaxValue) minIndent = 0;
+
+        // Fast path: nothing to strip
+        if (minIndent == 0 && effectiveFirst == 0 && effectiveLast == totalLines - 1)
+            return;
+
+        // ── Pass 3: build dedented result ────────────────────────────
+        var sb = new StringBuilder(s.Length);
+        pos = 0;
+        lineIdx = 0;
+        bool needSeparator = false;
+        while (pos <= span.Length)
+        {
+            int lineStart = pos;
+            int lineEnd = pos;
+            while (lineEnd < span.Length && span[lineEnd] != '\n' && span[lineEnd] != '\r')
+                lineEnd++;
+
+            if (lineIdx >= effectiveFirst && lineIdx <= effectiveLast)
+            {
+                if (needSeparator) sb.Append('\n');
+                needSeparator = true;
+
+                int lineLen = lineEnd - lineStart;
+                int skip = IsLineAllWhitespace(span, lineStart, lineLen)
+                    ? 0
+                    : Math.Min(minIndent, lineLen);
+                int contentLen = lineLen - skip;
+                if (contentLen > 0)
+                    sb.Append(span.Slice(lineStart + skip, contentLen));
+            }
+
+            lineIdx++;
+            if (lineEnd >= span.Length) break;
+            pos = AdvancePastNewline(span, lineEnd);
+        }
+
+        StringValue = sb.ToString();
+    }
+
+    static bool IsLineAllWhitespace(ReadOnlySpan<char> span, int start, int len)
+    {
+        for (int i = start; i < start + len; i++)
+            if (span[i] != ' ' && span[i] != '\t') return false;
+        return true;
+    }
+
+    static int AdvancePastNewline(ReadOnlySpan<char> span, int pos)
+    {
+        if (pos >= span.Length) return pos;
+        if (span[pos] == '\r')
+        {
+            pos++;
+            if (pos < span.Length && span[pos] == '\n') pos++;
+        }
+        else pos++; // '\n'
+        return pos;
+    }
+
 
     // ── Number parsing ───────────────────────────────────────────────
 

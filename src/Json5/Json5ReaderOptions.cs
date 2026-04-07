@@ -20,12 +20,25 @@ public record struct Json5ReaderOptions
     public int MaxDepth { get; set; }
 
     /// <summary>
+    /// When <see langword="true"/>, automatically removes common leading whitespace
+    /// from multi-line string values (strings whose resolved content contains newline characters).
+    /// <para>
+    /// The algorithm strips the first line if it is blank, strips the last line if it is blank,
+    /// then removes the minimum common leading whitespace from all remaining lines.
+    /// Property names are never affected.
+    /// </para>
+    /// Default is <see langword="false"/>.
+    /// </summary>
+    public bool AutoDedent { get; set; }
+
+    /// <summary>
     /// Creates a new instance with default values.
     /// </summary>
     public Json5ReaderOptions()
     {
         SpecialNumbers = SpecialNumberHandling.AsString;
         MaxDepth = 64;
+        AutoDedent = false;
     }
 }
 

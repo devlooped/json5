@@ -38,6 +38,16 @@ JSON5 input ──► Json5Tokenizer ─┤
 
 Configurable via `SpecialNumberHandling`: `AsString` (default), `AsNull`, or `Throw`.
 
+### Auto-Dedent
+
+When `Json5ReaderOptions.AutoDedent = true` (default `false`), string **values** are post-processed after tokenization:
+1. If the resolved string has no `\n` → no-op (zero allocation)
+2. Strip first line if blank; strip last line if blank
+3. Find minimum leading whitespace (spaces/tabs) across non-blank remaining lines
+4. Strip that indent from every line; rejoin with `\n`
+
+Property names are never dedented. Uses 3 linear passes with no arrays (constant space), allocating only a `StringBuilder` when a transformation is needed.
+
 ## Build & Test
 
 ```

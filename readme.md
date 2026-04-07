@@ -73,6 +73,35 @@ All [JSON5 extensions](https://spec.json5.org/) beyond standard JSON are support
 | Additional escape sequences | `\v`, `\0`, `\xHH` |
 | Extended whitespace | Unicode Zs category, BOM |
 
+## Auto-Dedent Multi-line Strings
+
+When parsing multi-line string values, you can automatically remove common leading 
+whitespace via `Json5ReaderOptions.AutoDedent`. This makes it easier to write readable 
+indented code without the indentation appearing in the final string value.
+
+```csharp
+var options = new Json5ReaderOptions { AutoDedent = true };
+var node = Json5.Parse("""
+    {
+        description: '
+            This is a multi-line string
+            with consistent indentation
+            that will be removed.
+        '
+    }
+    """, options);
+// description will be: "This is a multi-line string\nwith consistent indentation\nthat will be removed."
+```
+
+The algorithm:
+1. Strips the first line if blank
+2. Strips the last line if blank  
+3. Finds the minimum common leading whitespace across all remaining non-blank lines
+4. Removes that minimum indent from every line
+
+Only string values are affected; property names are never dedented. Blank lines 
+within the string are preserved.
+
 ## Infinity / NaN Handling
 
 Since standard JSON has no representation for `Infinity` and `NaN`, the behavior 

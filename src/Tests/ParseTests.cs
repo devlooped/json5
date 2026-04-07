@@ -308,3 +308,142 @@ public class ParseTests
     public void ParseInvalidEscapeDigitThrows()
         => Assert.Throws<Json5Exception>(() => J5.Parse("\"\\1\""));
 }
+
+public class AutoDedentTests
+{
+    static readonly Json5ReaderOptions Opts = new() { AutoDedent = true };
+
+    // ── No-op cases ──────────────────────────────────────────────
+
+    [Fact]
+    public void NoDedentWhenOptionOff()
+    {
+        // String has \n in it but option is off — content should be preserved as-is
+        var input = "'  hello\\n  world'";
+        var result = J5.Parse(input)!.GetValue<string>();
+        Assert.Equal("  hello\n  world", result);
+    }
+
+    [Fact]
+    public void NoDedentForSingleLine()
+    {
+        // No newlines → no change, no allocation
+        Assert.Equal("  hello", J5.Parse("'  hello'", Opts)!.GetValue<string>());
+    }
+
+    [Fact]
+    public void NoDedentWhenAlreadyNoIndent()
+    {
+        // Lines have no indent → return as-is
+        var input = "'line1\\nline2'";
+        Assert.Equal("line1\nline2", J5.Parse(input, Opts)!.GetValue<string>());
+    }
+
+    // ── Basic dedent ─────────────────────────────────────────────
+
+    [Fact]
+    public void DedentUniformIndent()
+    {
+        // Each line has 4-space indent → all stripped
+        var input = "'    hello\\n    world'";
+        Assert.Equal("hello\nworld", J5.Parse(input, Opts)!.GetValue<string>());
+    }
+
+    [Fact]
+    public void DedentMinimumIndent()
+    {
+        // Lines have different indents → only common minimum is stripped
+        var input = "'      alpha\\n    beta\\n      gamma'";
+        // min indent = 4
+        Assert.Equal("  alpha\nbeta\n  gamma", J5.Parse(input, Opts)!.GetValue<string>());
+    }
+
+    [Fact]
+    public void DedentTabIndent()
+    {
+        var input = "'\t\thello\\n\t\tworld'";
+        Assert.Equal("hello\nworld", J5.Parse(input, Opts)!.GetValue<string>());
+    }
+
+    // ── First / last blank-line stripping ────────────────────────
+
+    [Fact]
+    public void StripsFirstBlankLine()
+    {
+        // First line is blank (empty after \n) → stripped
+        var input = "'\\n    hello\\n    world'";
+        Assert.Equal("hello\nworld", J5.Parse(input, Opts)!.GetValue<string>());
+    }
+
+    [Fact]
+    public void StripsLastBlankLine()
+    {
+        var input = "'    hello\\n    world\\n    '";
+        Assert.Equal("hello\nworld", J5.Parse(input, Opts)!.GetValue<string>());
+    }
+
+    [Fact]
+    public void StripsBothFirstAndLastBlankLines()
+    {
+        var input = "'\\n    hello\\n    world\\n    '";
+        Assert.Equal("hello\nworld", J5.Parse(input, Opts)!.GetValue<string>());
+    }
+
+    [Fact]
+    public void AllBlankLinesProduceEmpty()
+    {
+        // Only blank lines → result is empty
+        var input = "'\\n    \\n    '";
+        Assert.Equal(string.Empty, J5.Parse(input, Opts)!.GetValue<string>());
+    }
+
+    // ── Blank lines in the middle are preserved ──────────────────
+
+    [Fact]
+    public void PreservesInnerBlankLines()
+    {
+        // Middle blank line is kept (just stripped of excess indent)
+        var input = "'    alpha\\n\\n    gamma'";
+        Assert.Equal("alpha\n\ngamma", J5.Parse(input, Opts)!.GetValue<string>());
+    }
+
+    // ── Property names are never dedented ────────────────────────
+
+    [Fact]
+    public void PropertyNameNotDedented()
+    {
+        // Property name with \n escape should NOT be dedented
+        var input = "{'  key\\n  ': 1}";
+        var node = J5.Parse(input, Opts)!;
+        Assert.NotNull(node["  key\n  "]);
+    }
+
+    // ── Works through all API paths ──────────────────────────────
+
+    [Fact]
+    public void DedentViaDeserialize()
+    {
+        var input = "'    hello\\n    world'";
+        var result = J5.Deserialize<string>(input, json5Options: Opts);
+        Assert.Equal("hello\nworld", result);
+    }
+
+    [Fact]
+    public void DedentViaToJson()
+    {
+        var input = "'    hello\\n    world'";
+        var json = J5.ToJson(input, Opts);
+        Assert.Equal("\"hello\\nworld\"", json);
+    }
+
+    // ── Line continuation (escaped newline) is not affected ──────
+
+    [Fact]
+    public void LineContinuationNotAffected()
+    {
+        // \\\n is a line continuation — produces no newline, so dedent has no effect
+        var input = "'    line1\\\n    line2'";
+        // The resolved string is "    line1    line2" (no newline), so no dedent
+        Assert.Equal("    line1    line2", J5.Parse(input, Opts)!.GetValue<string>());
+    }
+}
