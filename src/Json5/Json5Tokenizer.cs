@@ -592,7 +592,7 @@ ref struct Json5Tokenizer
 
                 int lineLen = lineEnd - lineStart;
                 int skip = IsLineAllWhitespace(span, lineStart, lineLen)
-                    ? 0
+                    ? lineLen
                     : Math.Min(minIndent, lineLen);
                 int contentLen = lineLen - skip;
                 if (contentLen > 0)
