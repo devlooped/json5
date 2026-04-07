@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="src/Json5/Json5.csproj" />
+  <Project Path="src/Json5.Configuration/Json5.Configuration.csproj" />
   <Project Path="src/Tests/Tests.csproj" />
 </Solution>

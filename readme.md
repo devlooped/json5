@@ -113,6 +113,78 @@ The algorithm:
 Only string values are affected; property names are never dedented. Blank lines 
 within the string are preserved.
 
+## Configuration
+
+The `Json5.Configuration` package integrates JSON5 files with the 
+[Microsoft.Extensions.Configuration](https://learn.microsoft.com/en-us/dotnet/core/extensions/configuration) 
+infrastructure, so you can use JSON5 anywhere standard JSON configuration is used.
+
+Install the package:
+
+```
+dotnet add package Json5.Configuration
+```
+
+### AddJson5File
+
+```csharp
+using Json5;
+
+var config = new ConfigurationBuilder()
+    .AddJson5File("appsettings.json5")
+    .AddJson5File("appsettings.Development.json5", optional: true, reloadOnChange: true)
+    .Build();
+```
+
+The file supports all JSON5 extensions — comments, trailing commas, unquoted keys, etc.:
+
+```json5
+// appsettings.json5
+{
+    Logging: {
+        LogLevel: {
+            Default: "Information",
+            // Silence noisy namespaces
+            "Microsoft.AspNetCore": "Warning",
+        },
+    },
+    ConnectionStrings: {
+        Default: "Server=localhost;Database=MyApp",
+    },
+}
+```
+
+### AddJson5Stream
+
+```csharp
+using Json5;
+
+using var stream = File.OpenRead("config.json5");
+
+var config = new ConfigurationBuilder()
+    .AddJson5Stream(stream)
+    .Build();
+```
+
+### Json5ReaderOptions
+
+Pass `Json5ReaderOptions` via the source action to control special number handling, max depth, and auto-dedent:
+
+```csharp
+var config = new ConfigurationBuilder()
+    .AddJson5File(source =>
+    {
+        source.Path = "appsettings.json5";
+        source.Optional = true;
+        source.ReloadOnChange = true;
+        source.Json5ReaderOptions = new Json5ReaderOptions
+        {
+            SpecialNumbers = SpecialNumberHandling.AsNull,
+        };
+    })
+    .Build();
+```
+
 ## Infinity / NaN Handling
 
 Since standard JSON has no representation for `Infinity` and `NaN`, the behavior 
