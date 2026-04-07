@@ -481,8 +481,8 @@ ref struct Json5Tokenizer
         if (position + digits > buffer.Length)
             throw Error($"Expected {digits} hex digits in escape sequence.");
 
-        int value = 0;
-        for (int i = 0; i < digits; i++)
+        var value = 0;
+        for (var i = 0; i < digits; i++)
         {
             var h = buffer[position];
             if (!IsHexDigit(h))
@@ -506,19 +506,19 @@ ref struct Json5Tokenizer
         var span = s.AsSpan();
 
         // ── Pass 1: count lines; detect first/last blank lines ───────
-        int totalLines = 0;
-        bool firstLineBlank = false;
-        bool lastLineBlank = false;
+        var totalLines = 0;
+        var firstLineBlank = false;
+        var lastLineBlank = false;
 
-        int pos = 0;
+        var pos = 0;
         while (pos <= span.Length)
         {
-            int lineStart = pos;
-            int lineEnd = pos;
+            var lineStart = pos;
+            var lineEnd = pos;
             while (lineEnd < span.Length && span[lineEnd] != '\n' && span[lineEnd] != '\r')
                 lineEnd++;
 
-            bool isBlank = IsLineAllWhitespace(span, lineStart, lineEnd - lineStart);
+            var isBlank = IsLineAllWhitespace(span, lineStart, lineEnd - lineStart);
 
             if (totalLines == 0) firstLineBlank = isBlank;
             lastLineBlank = isBlank;
@@ -528,8 +528,8 @@ ref struct Json5Tokenizer
             pos = AdvancePastNewline(span, lineEnd);
         }
 
-        int effectiveFirst = firstLineBlank ? 1 : 0;
-        int effectiveLast = lastLineBlank && totalLines - 1 > effectiveFirst
+        var effectiveFirst = firstLineBlank ? 1 : 0;
+        var effectiveLast = lastLineBlank && totalLines - 1 > effectiveFirst
             ? totalLines - 2
             : totalLines - 1;
 
@@ -540,22 +540,22 @@ ref struct Json5Tokenizer
         }
 
         // ── Pass 2: find minimum indent across non-blank lines ───────
-        int minIndent = int.MaxValue;
+        var minIndent = int.MaxValue;
         pos = 0;
-        int lineIdx = 0;
+        var lineIdx = 0;
         while (pos <= span.Length)
         {
-            int lineStart = pos;
-            int lineEnd = pos;
+            var lineStart = pos;
+            var lineEnd = pos;
             while (lineEnd < span.Length && span[lineEnd] != '\n' && span[lineEnd] != '\r')
                 lineEnd++;
 
             if (lineIdx >= effectiveFirst && lineIdx <= effectiveLast)
             {
-                int lineLen = lineEnd - lineStart;
+                var lineLen = lineEnd - lineStart;
                 if (!IsLineAllWhitespace(span, lineStart, lineLen))
                 {
-                    int indent = 0;
+                    var indent = 0;
                     while (indent < lineLen && (span[lineStart + indent] == ' ' || span[lineStart + indent] == '\t'))
                         indent++;
                     if (indent < minIndent) minIndent = indent;
@@ -577,11 +577,11 @@ ref struct Json5Tokenizer
         var sb = new StringBuilder(s.Length);
         pos = 0;
         lineIdx = 0;
-        bool needSeparator = false;
+        var needSeparator = false;
         while (pos <= span.Length)
         {
-            int lineStart = pos;
-            int lineEnd = pos;
+            var lineStart = pos;
+            var lineEnd = pos;
             while (lineEnd < span.Length && span[lineEnd] != '\n' && span[lineEnd] != '\r')
                 lineEnd++;
 
@@ -590,11 +590,11 @@ ref struct Json5Tokenizer
                 if (needSeparator) sb.Append('\n');
                 needSeparator = true;
 
-                int lineLen = lineEnd - lineStart;
-                int skip = IsLineAllWhitespace(span, lineStart, lineLen)
+                var lineLen = lineEnd - lineStart;
+                var skip = IsLineAllWhitespace(span, lineStart, lineLen)
                     ? lineLen
                     : Math.Min(minIndent, lineLen);
-                int contentLen = lineLen - skip;
+                var contentLen = lineLen - skip;
                 if (contentLen > 0)
                     sb.Append(span.Slice(lineStart + skip, contentLen));
             }
@@ -609,7 +609,7 @@ ref struct Json5Tokenizer
 
     static bool IsLineAllWhitespace(ReadOnlySpan<char> span, int start, int len)
     {
-        for (int i = start; i < start + len; i++)
+        for (var i = start; i < start + len; i++)
             if (span[i] != ' ' && span[i] != '\t') return false;
         return true;
     }
@@ -632,8 +632,8 @@ ref struct Json5Tokenizer
     void ReadNumber()
     {
         var start = position;
-        bool negative = false;
-        bool hasPlus = false;
+        var negative = false;
+        var hasPlus = false;
 
         // Handle sign
         if (buffer[position] == (byte)'-')
@@ -713,9 +713,9 @@ ref struct Json5Tokenizer
         var sb = new StringBuilder();
         if (negative) sb.Append('-');
 
-        bool hasInteger = false;
-        bool hasFraction = false;
-        bool hasExponent = false;
+        var hasInteger = false;
+        var hasFraction = false;
+        var hasExponent = false;
 
         // Integer part (may be absent if starts with '.')
         if (position < buffer.Length && IsDigit(buffer[position]))
@@ -963,7 +963,7 @@ ref struct Json5Tokenizer
         if (position + expected.Length > buffer.Length)
             throw Error($"Unexpected end of input.");
 
-        for (int i = 0; i < expected.Length; i++)
+        for (var i = 0; i < expected.Length; i++)
         {
             if (buffer[position + i] != expected[i])
                 throw Error($"Expected '{Encoding.UTF8.GetString(expected)}'.");
