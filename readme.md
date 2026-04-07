@@ -113,17 +113,36 @@ The algorithm:
 Only string values are affected; property names are never dedented. Blank lines 
 within the string are preserved.
 
+## Infinity / NaN Handling
+
+Since standard JSON has no representation for `Infinity` and `NaN`, the behavior 
+is configurable via `Json5ReaderOptions.SpecialNumbers`:
+
+| Mode | Behavior |
+|------|----------|
+| `AsString` (default) | Emits as `"Infinity"`, `"-Infinity"`, or `"NaN"` |
+| `AsNull` | Emits as `null` |
+| `Throw` | Throws `Json5Exception` |
+
+```csharp
+var options = new Json5ReaderOptions 
+{ 
+    SpecialNumbers = SpecialNumberHandling.AsNull 
+};
+var node = Json5.Parse("Infinity", options); // returns null
+```
+
+<!-- #content -->
+
 ## Configuration
 
+[![Version](https://img.shields.io/nuget/vpre/Json5.Configuration.svg?color=royalblue)](https://www.nuget.org/packages/Json5.Configuration)
+[![Downloads](https://img.shields.io/nuget/dt/Json5.Configuration.svg?color=darkmagenta)](https://www.nuget.org/packages/Json5.Configuration)
+
+<!-- #configuration -->
 The `Json5.Configuration` package integrates JSON5 files with the 
 [Microsoft.Extensions.Configuration](https://learn.microsoft.com/en-us/dotnet/core/extensions/configuration) 
 infrastructure, so you can use JSON5 anywhere standard JSON configuration is used.
-
-Install the package:
-
-```
-dotnet add package Json5.Configuration
-```
 
 ### AddJson5File
 
@@ -185,26 +204,7 @@ var config = new ConfigurationBuilder()
     .Build();
 ```
 
-## Infinity / NaN Handling
-
-Since standard JSON has no representation for `Infinity` and `NaN`, the behavior 
-is configurable via `Json5ReaderOptions.SpecialNumbers`:
-
-| Mode | Behavior |
-|------|----------|
-| `AsString` (default) | Emits as `"Infinity"`, `"-Infinity"`, or `"NaN"` |
-| `AsNull` | Emits as `null` |
-| `Throw` | Throws `Json5Exception` |
-
-```csharp
-var options = new Json5ReaderOptions 
-{ 
-    SpecialNumbers = SpecialNumberHandling.AsNull 
-};
-var node = Json5.Parse("Infinity", options); // returns null
-```
-
-<!-- #content -->
+<!-- #configuration -->
 ---
 <!-- include https://github.com/devlooped/sponsors/raw/main/footer.md -->
 # Sponsors 
