@@ -276,6 +276,95 @@ public class Json5ConfigurationTests
         Assert.Equal(string.Empty, config["items"]);
     }
 
+    [Fact]
+    public void AddJson5File_WithPathAndOptions_UsesReaderOptions()
+    {
+        var json5 = "{ val: Infinity }";
+
+        var config = new ConfigurationBuilder()
+            .SetFileProvider(new InMemoryFileProvider(json5))
+            .AddJson5File("test.json5", options: new Json5ReaderOptions { SpecialNumbers = SpecialNumberHandling.AsNull })
+            .Build();
+
+        Assert.Null(config["val"]);
+    }
+
+    [Fact]
+    public void AddJson5File_WithPathAndOptions_DefaultOptionsProduceString()
+    {
+        var json5 = "{ val: Infinity }";
+
+        var config = new ConfigurationBuilder()
+            .SetFileProvider(new InMemoryFileProvider(json5))
+            .AddJson5File("test.json5")
+            .Build();
+
+        Assert.NotNull(config["val"]);
+    }
+
+    [Fact]
+    public void AddJson5File_WithProviderPathAndOptions_UsesReaderOptions()
+    {
+        var json5 = "{ val: NaN }";
+
+        var config = new ConfigurationBuilder()
+            .AddJson5File(new InMemoryFileProvider(json5), "test.json5", options: new Json5ReaderOptions { SpecialNumbers = SpecialNumberHandling.AsNull })
+            .Build();
+
+        Assert.Null(config["val"]);
+    }
+
+    [Fact]
+    public void AddJson5File_WithProviderPathAndOptions_DefaultOptionsProduceString()
+    {
+        var json5 = "{ val: NaN }";
+
+        var config = new ConfigurationBuilder()
+            .AddJson5File(new InMemoryFileProvider(json5), "test.json5")
+            .Build();
+
+        Assert.NotNull(config["val"]);
+    }
+
+    [Fact]
+    public void AddJson5Stream_WithOptions_UsesReaderOptions()
+    {
+        var json5 = "{ val: -Infinity }";
+        var stream = new MemoryStream(Encoding.UTF8.GetBytes(json5));
+
+        var config = new ConfigurationBuilder()
+            .AddJson5Stream(stream, new Json5ReaderOptions { SpecialNumbers = SpecialNumberHandling.AsNull })
+            .Build();
+
+        Assert.Null(config["val"]);
+    }
+
+    [Fact]
+    public void AddJson5Stream_WithOptions_DefaultOptionsProduceString()
+    {
+        var json5 = "{ val: -Infinity }";
+        var stream = new MemoryStream(Encoding.UTF8.GetBytes(json5));
+
+        var config = new ConfigurationBuilder()
+            .AddJson5Stream(stream)
+            .Build();
+
+        Assert.NotNull(config["val"]);
+    }
+
+    [Fact]
+    public void AddJson5File_WithProviderPathAndAutoDedentOption_DedentsMultilineString()
+    {
+        // '\n    line1\n    line2\n' resolves to a string with newlines and common 4-space indent
+        var json5 = "{ msg: '\\n    line1\\n    line2\\n' }";
+
+        var config = new ConfigurationBuilder()
+            .AddJson5File(new InMemoryFileProvider(json5), "test.json5", options: new Json5ReaderOptions { AutoDedent = true })
+            .Build();
+
+        Assert.Equal("line1\nline2", config["msg"]);
+    }
+
     static IConfiguration LoadFromJson5(string json5)
     {
         var stream = new MemoryStream(Encoding.UTF8.GetBytes(json5));
