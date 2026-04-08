@@ -1,4 +1,5 @@
-# Json5
+![Icon](assets/img/icon.png) Json5
+============
 
 [![Version](https://img.shields.io/nuget/vpre/Json5.svg?color=royalblue)](https://www.nuget.org/packages/Json5)
 [![Downloads](https://img.shields.io/nuget/dt/Json5.svg?color=darkmagenta)](https://www.nuget.org/packages/Json5)
