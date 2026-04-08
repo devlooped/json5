@@ -169,7 +169,7 @@ The file supports all JSON5 extensions — comments, trailing commas, unquoted k
         },
     },
     ConnectionStrings: {
-        Default: "Server=localhost;Database=MyApp",
+        Default: "UseDevelopmentStorage=true",
     },
 }
 ```
