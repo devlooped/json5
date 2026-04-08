@@ -135,7 +135,8 @@ var node = Json5.Parse("Infinity", options); // returns null
 
 <!-- #content -->
 
-## Configuration
+![Icon](assets/img/icon.png) Json5.Configuration
+============
 
 [![Version](https://img.shields.io/nuget/vpre/Json5.Configuration.svg?color=royalblue)](https://www.nuget.org/packages/Json5.Configuration)
 [![Downloads](https://img.shields.io/nuget/dt/Json5.Configuration.svg?color=darkmagenta)](https://www.nuget.org/packages/Json5.Configuration)
