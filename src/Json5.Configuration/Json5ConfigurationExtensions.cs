@@ -17,32 +17,12 @@ public static class Json5ConfigurationExtensions
     /// <param name="builder">The <see cref="IConfigurationBuilder"/> to add to.</param>
     /// <param name="path">Path relative to the base path stored in
     /// <see cref="IConfigurationBuilder.Properties"/> of <paramref name="builder"/>.</param>
-    /// <returns>The <see cref="IConfigurationBuilder"/>.</returns>
-    public static IConfigurationBuilder AddJson5File(this IConfigurationBuilder builder, string path)
-        => AddJson5File(builder, provider: null, path: path, optional: false, reloadOnChange: false);
-
-    /// <summary>
-    /// Adds a JSON5 configuration source to <paramref name="builder"/>.
-    /// </summary>
-    /// <param name="builder">The <see cref="IConfigurationBuilder"/> to add to.</param>
-    /// <param name="path">Path relative to the base path stored in
-    /// <see cref="IConfigurationBuilder.Properties"/> of <paramref name="builder"/>.</param>
-    /// <param name="optional">Whether the file is optional.</param>
-    /// <returns>The <see cref="IConfigurationBuilder"/>.</returns>
-    public static IConfigurationBuilder AddJson5File(this IConfigurationBuilder builder, string path, bool optional)
-        => AddJson5File(builder, provider: null, path: path, optional: optional, reloadOnChange: false);
-
-    /// <summary>
-    /// Adds a JSON5 configuration source to <paramref name="builder"/>.
-    /// </summary>
-    /// <param name="builder">The <see cref="IConfigurationBuilder"/> to add to.</param>
-    /// <param name="path">Path relative to the base path stored in
-    /// <see cref="IConfigurationBuilder.Properties"/> of <paramref name="builder"/>.</param>
     /// <param name="optional">Whether the file is optional.</param>
     /// <param name="reloadOnChange">Whether the configuration should be reloaded if the file changes.</param>
+    /// <param name="options">The <see cref="Json5ReaderOptions"/> to use when reading the JSON5 data.</param>
     /// <returns>The <see cref="IConfigurationBuilder"/>.</returns>
-    public static IConfigurationBuilder AddJson5File(this IConfigurationBuilder builder, string path, bool optional, bool reloadOnChange)
-        => AddJson5File(builder, provider: null, path: path, optional: optional, reloadOnChange: reloadOnChange);
+    public static IConfigurationBuilder AddJson5File(this IConfigurationBuilder builder, string path, bool optional = false, bool reloadOnChange = false, Json5ReaderOptions? options = null)
+        => AddJson5File(builder, null, path, optional, reloadOnChange, options);
 
     /// <summary>
     /// Adds a JSON5 configuration source to <paramref name="builder"/>.
@@ -53,8 +33,9 @@ public static class Json5ConfigurationExtensions
     /// <see cref="IConfigurationBuilder.Properties"/> of <paramref name="builder"/>.</param>
     /// <param name="optional">Whether the file is optional.</param>
     /// <param name="reloadOnChange">Whether the configuration should be reloaded if the file changes.</param>
+    /// <param name="options">The <see cref="Json5ReaderOptions"/> to use when reading the JSON5 data.</param>
     /// <returns>The <see cref="IConfigurationBuilder"/>.</returns>
-    public static IConfigurationBuilder AddJson5File(this IConfigurationBuilder builder, IFileProvider? provider, string path, bool optional, bool reloadOnChange)
+    public static IConfigurationBuilder AddJson5File(this IConfigurationBuilder builder, IFileProvider? provider, string path, bool optional = false, bool reloadOnChange = false, Json5ReaderOptions? options = null)
     {
         ThrowIfNull(builder);
 
@@ -67,6 +48,9 @@ public static class Json5ConfigurationExtensions
             s.Path = path;
             s.Optional = optional;
             s.ReloadOnChange = reloadOnChange;
+            if (options != null)
+                s.Json5ReaderOptions = options.Value;
+
             s.ResolveFileProvider();
         });
     }
@@ -85,11 +69,17 @@ public static class Json5ConfigurationExtensions
     /// </summary>
     /// <param name="builder">The <see cref="IConfigurationBuilder"/> to add to.</param>
     /// <param name="stream">The <see cref="Stream"/> to read the JSON5 data from.</param>
+    /// <param name="options">The <see cref="Json5ReaderOptions"/> to use when reading the JSON5 data.</param>
     /// <returns>The <see cref="IConfigurationBuilder"/>.</returns>
-    public static IConfigurationBuilder AddJson5Stream(this IConfigurationBuilder builder, Stream stream)
+    public static IConfigurationBuilder AddJson5Stream(this IConfigurationBuilder builder, Stream stream, Json5ReaderOptions? options = null)
     {
         ThrowIfNull(builder);
 
-        return builder.Add<Json5StreamConfigurationSource>(s => s.Stream = stream);
+        return builder.Add<Json5StreamConfigurationSource>(s =>
+        {
+            s.Stream = stream;
+            if (options != null)
+                s.Json5ReaderOptions = options.Value;
+        });
     }
 }

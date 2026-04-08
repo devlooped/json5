@@ -199,7 +199,8 @@ var config = new ConfigurationBuilder()
         source.ReloadOnChange = true;
         source.Json5ReaderOptions = new Json5ReaderOptions
         {
-            SpecialNumbers = SpecialNumberHandling.AsNull,
+            AutoDedent = true,
+            SpecialNumbers = SpecialNumberHandling.AsNull
         };
     })
     .Build();
