@@ -109,8 +109,8 @@
 	weak
 [file "src/Directory.Build.props"]
 	url = https://github.com/devlooped/oss/blob/main/src/Directory.Build.props
-	sha = 4b84c540df6f37c30fb38df7947d79871c34f036
-	etag = bca64456d4e2cd05375a72b6de376b2c51edf6ad49029aa9a729f4a349a54656
+	sha = dd13ed3334135c30dcb1e3b2295dc7622de298d9
+	etag = bd05f9f240823c0ac79ddfefe654061550c36f82dd94fa513b82900e92686a5f
 	weak
 [file "src/Directory.Build.targets"]
 	url = https://github.com/devlooped/oss/blob/main/src/Directory.Build.targets
