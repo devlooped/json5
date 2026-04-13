@@ -10,6 +10,7 @@
     <CopyOutputSymbolsToOutputDirectory>false</CopyOutputSymbolsToOutputDirectory>
     <DeployExtension>false</DeployExtension>
     <CreateVsixContainer>$(PackOnBuild)</CreateVsixContainer>
+    <ExtensionInstallationFolder>Json5</ExtensionInstallationFolder>
   </PropertyGroup>
 
   <PropertyGroup Label="VSIX Path Fixup"  Condition="$(VsSDKInstall) != ''">
