@@ -4,8 +4,7 @@
     <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
     <PackageId>Json5.Configuration</PackageId>
     <Description>
-      A Microsoft.Extensions.Configuration provider for JSON5 files,
-      built on top of the Json5 parser. Requires .NET 10+.
+      A Microsoft.Extensions.Configuration provider for JSON5 files, on top of the Json5 parser. 
     </Description>
     <PackageTags>json json5 dotnet configuration</PackageTags>
   </PropertyGroup>

@@ -8,7 +8,8 @@
     <IncludeDebugSymbolsInLocalVSIXDeployment>false</IncludeDebugSymbolsInLocalVSIXDeployment>
     <CopyBuildOutputToOutputDirectory>false</CopyBuildOutputToOutputDirectory>
     <CopyOutputSymbolsToOutputDirectory>false</CopyOutputSymbolsToOutputDirectory>
-    <CustomAfterMicrosoftCSharpTargets Condition="$(VsSDKInstall) != ''">$(VsSDKInstall)\Microsoft.VsSDK.targets</CustomAfterMicrosoftCSharpTargets>
+    <DeployExtension>false</DeployExtension>
+    <CreateVsixContainer>$(PackOnBuild)</CreateVsixContainer>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -44,6 +45,6 @@
     </PropertyGroup>
   </Target>
 
-  <Target Name="VsixOnPack" BeforeTargets="Pack" DependsOnTargets="CreateVsixContainer"/>
+  <Target Name="VsixOnPack" BeforeTargets="Pack" DependsOnTargets="CreateVsixContainer" />
 
 </Project>
