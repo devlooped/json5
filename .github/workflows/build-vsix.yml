@@ -45,7 +45,7 @@ jobs:
         uses: devlooped/actions-dotnet-env@v1
 
       - name: 🙏 build
-        run: dotnet msbuild src/Json5.VisualStudio/Json5.VisualStudio.csproj -m:1 -bl:build.binlog
+        run: dotnet msbuild -r src/Json5.VisualStudio/Json5.VisualStudio.csproj -m:1 -bl:build.binlog
 
       - name: 🐛 logs
         uses: actions/upload-artifact@v4
