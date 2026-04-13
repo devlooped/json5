@@ -52,7 +52,7 @@ jobs:
         run: dotnet nuget push *.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}} --skip-duplicate
 
       - name: 📦 release assets
-        run: gh release upload ${{ github.ref_name }} bin/*.nupkg bin/**/*.vsix --clobber
+        run: gh release upload ${{ github.ref_name }} bin/*.nupkg --clobber
 
       - name: 🚀 sleet
         env:

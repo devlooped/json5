@@ -1,6 +1,5 @@
 <Solution>
   <Project Path="src/Json5.Configuration/Json5.Configuration.csproj" />
-  <Project Path="src/Json5.VisualStudio/Json5.VisualStudio.csproj" Id="c1cacf43-b1ec-4d67-82fe-17cfb28bec30" />
   <Project Path="src/Json5/Json5.csproj" />
   <Project Path="src/Tests/Tests.csproj" />
 </Solution>
