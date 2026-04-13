@@ -53,8 +53,7 @@
     <PropertyGroup>
       <TargetVsixContainer>$(PackageOutputPath)\Devlooped.Json5.$(Version).vsix</TargetVsixContainer>
     </PropertyGroup>
+    <MakeDir Directories="$(PackageOutputPath)" Condition="!Exists('$(PackageOutputPath)')" />
   </Target>
-
-  <Target Name="VsixOnPack" BeforeTargets="Pack" DependsOnTargets="CreateVsixContainer" />
 
 </Project>
