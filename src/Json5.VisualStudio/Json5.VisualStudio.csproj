@@ -12,6 +12,15 @@
     <CreateVsixContainer>$(PackOnBuild)</CreateVsixContainer>
   </PropertyGroup>
 
+  <PropertyGroup Label="VSIX Path Fixup"  Condition="$(VsSDKInstall) != ''">
+    <VsSDKInstall>$(VsSDKInstall.ToLowerInvariant())</VsSDKInstall>
+    <VsSDKIncludes>$(VsSDKInstall)\inc</VsSDKIncludes>
+    <VsSDKToolsPath>$(VsSDKInstall)\bin</VsSDKToolsPath>
+    <VsSDKX86ToolsPath>$(VsSDKInstall)\bin\x86</VsSDKX86ToolsPath>
+    <VsSDKARM64ToolsPath>$(VsSDKInstall)\bin\arm64</VsSDKARM64ToolsPath>
+    <CustomAfterMicrosoftCSharpTargets>$(VsSDKInstall)\Microsoft.VsSDK.targets</CustomAfterMicrosoftCSharpTargets>
+  </PropertyGroup>
+
   <PropertyGroup>
     <!-- Enables F5 -->
     <StartAction>Program</StartAction>
@@ -33,6 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
     <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.14.40265" />
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.14.2142" PrivateAssets="all" />
   </ItemGroup>
