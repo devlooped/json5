@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="Devlooped.Json5" Version="|Json5.Language;GetVersion|" Language="en-US" Publisher="Daniel Cazzulino" />
+        <Identity Id="Devlooped.Json5" Version="|Json5.VisualStudio;GetVersion|" Language="en-US" Publisher="Daniel Cazzulino" />
         <DisplayName>Json5</DisplayName>
         <Description xml:space="preserve">A JSON5 TextMate-powered grammar for Visual Studio</Description>
         <MoreInfo>https://github.com/devlooped/json5</MoreInfo>

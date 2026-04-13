@@ -44,4 +44,6 @@
     </PropertyGroup>
   </Target>
 
+  <Target Name="VsixOnPack" BeforeTargets="Pack" DependsOnTargets="CreateVsixContainer"/>
+
 </Project>
