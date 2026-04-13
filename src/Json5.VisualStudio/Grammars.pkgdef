@@ -1,0 +1,13 @@
+﻿; Registering the package
+[$RootKey$\InstalledProducts\Json5.LanguagePackage]
+"Package"="{c1cacf43-b1ec-4d67-82fe-17cfb28bec30}"
+[$RootKey$\BindingPaths\{c1cacf43-b1ec-4d67-82fe-17cfb28bec30}]
+"$PackageFolder$"=""
+
+; Registering the TextMate grammar
+[$RootKey$\TextMate\Repositories]
+"Json5"="$PackageFolder$\Grammars"
+
+; Match file extensions with icons. See full icon list at https://glyphlist.azurewebsites.net/knownmonikers/
+[$RootKey$\ShellFileAssociations\.pkgdef]
+"DefaultIconMoniker"="KnownMonikers.JSONScript"

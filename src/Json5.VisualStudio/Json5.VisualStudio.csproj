@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <GeneratePkgDefFile>false</GeneratePkgDefFile>
+    <IncludeAssemblyInVSIXContainer>false</IncludeAssemblyInVSIXContainer>
+    <IncludeDebugSymbolsInVSIXContainer>false</IncludeDebugSymbolsInVSIXContainer>
+    <IncludeDebugSymbolsInLocalVSIXDeployment>false</IncludeDebugSymbolsInLocalVSIXDeployment>
+    <CopyBuildOutputToOutputDirectory>false</CopyBuildOutputToOutputDirectory>
+    <CopyOutputSymbolsToOutputDirectory>false</CopyOutputSymbolsToOutputDirectory>
+    <CustomAfterMicrosoftCSharpTargets Condition="$(VsSDKInstall) != ''">$(VsSDKInstall)\Microsoft.VsSDK.targets</CustomAfterMicrosoftCSharpTargets>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Enables F5 -->
+    <StartAction>Program</StartAction>
+    <StartProgram>$(DevEnvDir)devenv.exe</StartProgram>
+    <StartArguments>/rootSuffix Exp /log</StartArguments>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Grammars.pkgdef" />
+    <None Remove="Grammars\json5.json" />
+    <None Remove="Resources\Icon128x128.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Grammars.pkgdef" IncludeInVSIX="true" />
+    <Content Include="Grammars\json5.json" IncludeInVSIX="true" />
+    <Content Include="Resources\Icon128x128.png" IncludeInVSIX="true" />
+    <Content Include="..\..\osmfeula.txt" Link="osmfeula.txt" IncludeInVSIX="true" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.14.40265" />
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.14.2142" PrivateAssets="all" />
+  </ItemGroup>
+
+  <Target Name="GetVersion" Returns="$(Version)" />
+
+  <Target Name="GetVsixName" Returns="$(TargetVsixContainer)" BeforeTargets="CreateVsixContainer">
+    <PropertyGroup>
+      <TargetVsixContainer>$(PackageOutputPath)\Devlooped.Json5.$(Version).vsix</TargetVsixContainer>
+    </PropertyGroup>
+  </Target>
+
+</Project>

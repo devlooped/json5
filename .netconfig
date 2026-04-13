@@ -127,3 +127,4 @@
 	sha = 666a2a7c315f72199c418f11482a950fc69a8901
 	etag = 91ea15c07bfd784036c6ca931f5b2df7e9767b8367146d96c79caef09d63899f
 	weak
+[file "src/oss.csproj"]
