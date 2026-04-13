@@ -1,5 +1,13 @@
 # Changelog
 
+## [v1.0.3](https://github.com/devlooped/json5/tree/v1.0.3) (2026-04-13)
+
+[Full Changelog](https://github.com/devlooped/json5/compare/v1.0.2...v1.0.3)
+
+:sparkles: Implemented enhancements:
+
+- Add Visual Studio grammar for JSON5 [\#14](https://github.com/devlooped/json5/pull/14) (@kzu)
+
 ## [v1.0.2](https://github.com/devlooped/json5/tree/v1.0.2) (2026-04-08)
 
 [Full Changelog](https://github.com/devlooped/json5/compare/v1.0.1...v1.0.2)
