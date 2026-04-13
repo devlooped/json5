@@ -142,7 +142,7 @@ var node = Json5.Parse("Infinity", options); // returns null
 [![Downloads](https://img.shields.io/nuget/dt/Json5.Configuration.svg?color=darkmagenta)](https://www.nuget.org/packages/Json5.Configuration)
 
 <!-- #configuration -->
-The `Json5.Configuration` package integrates JSON5 files with the 
+The `Json5.Configuration` package integrates [JSON5](https://json5.org/) files with the 
 [Microsoft.Extensions.Configuration](https://learn.microsoft.com/en-us/dotnet/core/extensions/configuration) 
 infrastructure, so you can use JSON5 anywhere standard JSON configuration is used.
 
@@ -157,7 +157,7 @@ var config = new ConfigurationBuilder()
     .Build();
 ```
 
-The file supports all JSON5 extensions — comments, trailing commas, unquoted keys, etc.:
+The file supports all [JSON5 extensions](https://spec.json5.org/) — comments, trailing commas, unquoted keys, etc.:
 
 ```json5
 // appsettings.json5
