@@ -1,5 +1,9 @@
 # Changelog
 
+## [v1.0.4](https://github.com/devlooped/json5/tree/v1.0.4) (2026-04-13)
+
+[Full Changelog](https://github.com/devlooped/json5/compare/v1.0.3...v1.0.4)
+
 ## [v1.0.3](https://github.com/devlooped/json5/tree/v1.0.3) (2026-04-13)
 
 [Full Changelog](https://github.com/devlooped/json5/compare/v1.0.2...v1.0.3)
