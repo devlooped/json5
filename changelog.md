@@ -8,6 +8,10 @@
 
 - Add Visual Studio grammar for JSON5 [\#14](https://github.com/devlooped/json5/pull/14) (@kzu)
 
+:twisted_rightwards_arrows: Merged:
+
+- Build VSIX separately on Windows [\#15](https://github.com/devlooped/json5/pull/15) (@kzu)
+
 ## [v1.0.2](https://github.com/devlooped/json5/tree/v1.0.2) (2026-04-08)
 
 [Full Changelog](https://github.com/devlooped/json5/compare/v1.0.1...v1.0.2)
