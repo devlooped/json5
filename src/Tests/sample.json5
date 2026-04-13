@@ -1,0 +1,8 @@
+{
+  hola: "yay!",
+  version: 1.0,
+  chota: {
+      "foo": true,
+      "bar": null,
+  }
+}
